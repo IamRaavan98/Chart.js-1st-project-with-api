@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My first api project</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body>
+    <canvas id="myChart" width="400" height="400"> </canvas>
+    <script>
+ makegraph();
+
+        async function getDATA(){
+            let x = [];
+            let y = [];
+            const response = await fetch('ZonAnn.Ts+dSST.csv');
+            const data = await response.text();
+            const rows = data.split('\n').slice(2); //split was used so the data comes in row by row with no.
+            // console.log(rows);
+            rows.forEach(element => {
+                // console.log(element);
+                const row = element.split(',');//it split one array data into another array with indexes as with element we cant access perticular data inside array 
+                x.push(row[0]);
+                y.push(row[1]);
+            });
+            
+            return {x,y};
+        }     
+            
+     async function makegraph(){
+      const data = await getDATA();
+      const ctx = document.getElementById('myChart').getContext('2d');
+      
+      const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: data.x,
+        datasets: [{
+            label: 'Climate-Control',
+            data: data.y,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor:000000,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+
+            }
+        }
+    }
+});
+
+}
+     
+
+    </script>
+</body>
+</html>
